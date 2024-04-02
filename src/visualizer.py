@@ -68,21 +68,21 @@ class CameraVisualizer:
 
         self._raw_images = None
         self._bit_images = None
-        self._image_color_scale = None
+        self._image_colorscale = None
 
         if images is not None:
             self._raw_images = images
             self._bit_images = []
-            self._image_color_scale = []
+            self._image_colorscale = []
             for img in images:
                 if img is None:
                     self._bit_images.append(None)
-                    self._image_color_scale.append(None)
+                    self._image_colorscale.append(None)
                     continue
 
-                bit_img, color_scale = self.encode_image(img)
+                bit_img, colorscale = self.encode_image(img)
                 self._bit_images.append(bit_img)
-                self._image_color_scale.append(color_scale)
+                self._image_colorscale.append(colorscale)
 
         self._mesh = None
         if mesh_path is not None and os.path.exists(mesh_path):
@@ -102,9 +102,9 @@ class CameraVisualizer:
         bit_image = Image.fromarray(raw_image).convert("P", palette="WEB", dither=None)
         # bit_image = Image.fromarray(raw_image.clip(0, 254)).convert(
         #     'P', palette='WEB', dither=None)
-        color_scale = [[i / 255.0, "rgb({}, {}, {})".format(*rgb)] for i, rgb in enumerate(idx_to_color)]
+        colorscale = [[i / 255.0, "rgb({}, {}, {})".format(*rgb)] for i, rgb in enumerate(idx_to_color)]
 
-        return bit_image, color_scale
+        return bit_image, colorscale
 
     def update_figure(
         self,
@@ -152,7 +152,7 @@ class CameraVisualizer:
 
                 raw_image = self._raw_images[i]
                 bit_image = self._bit_images[i]
-                color_scale = self._image_color_scale[i]
+                colorscale = self._image_colorscale[i]
 
                 (H, W, C) = raw_image.shape
 
@@ -175,7 +175,7 @@ class CameraVisualizer:
                         surfacecolor=bit_image,
                         cmin=0,
                         cmax=255,
-                        color_scale=color_scale,
+                        colorscale=colorscale,
                         showscale=False,
                         lighting_diffuse=1.0,
                         lighting_ambient=1.0,
